@@ -1,9 +1,13 @@
 import {
   createBrowserRouter,
-  RouterProvider,
 } from "react-router";
 import MainLayout from "../Layouts/MainLayout";
 import Home from "../Pages/Home/Home";
+import PrivateRoute from '../Context/PrivateRoute';
+import AllProperties from "../Pages/AllProperties/AllProperties";
+import Dashboard from "../Pages/Dashboard/Dashboard";
+import Login from "../Components/Login";
+import Register from "../Components/Register";
 
 export const router = createBrowserRouter([
   {
@@ -13,7 +17,23 @@ export const router = createBrowserRouter([
         {
             index:true,
             Component:Home
-        }
+        },
+        {
+            path:'/login',
+            Component:Login
+        },
+        {
+            path:'/register',
+            Component:Register
+        },
+        {
+            path:'/all-properties',
+            element:(<PrivateRoute><AllProperties></AllProperties></PrivateRoute>)
+        },
+        {
+            path:'/dashboard',
+            element:(<PrivateRoute><Dashboard></Dashboard></PrivateRoute>)
+        },
     ]
   },
 ]);

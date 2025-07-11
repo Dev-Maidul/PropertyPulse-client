@@ -1,44 +1,61 @@
-import {
-  createBrowserRouter,
-} from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../Layouts/MainLayout";
 import Home from "../Pages/Home/Home";
-import PrivateRoute from '../Context/PrivateRoute';
+import PrivateRoute from "../Context/PrivateRoute";
 import AllProperties from "../Pages/AllProperties/AllProperties";
-import Dashboard from "../Pages/Dashboard/Dashboard";
+import DashboardLayout from "../Pages/Dashboard/DashboardLayout";
 import Login from "../Components/Login";
 import Register from "../Components/Signup";
 import ErrorPage from "../Components/ErrorPage";
+import AddProperty from "../Dashboard/Agent/AddProperty";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component:MainLayout,
-    children:[
-        {
-            index:true,
-            Component:Home
-        },
-        {
-            path:'/login',
-            Component:Login
-        },
-        {
-            path:'/signup',
-            Component:Register
-        },
-        {
-            path:'/all-properties',
-            element:(<PrivateRoute><AllProperties></AllProperties></PrivateRoute>)
-        },
-        {
-            path:'/dashboard',
-            element:(<PrivateRoute><Dashboard></Dashboard></PrivateRoute>)
-        },
-    ]
+    element: <MainLayout />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Register />,
+      },
+      {
+        path: "/all-properties",
+        element: (
+          <PrivateRoute>
+            <AllProperties />
+          </PrivateRoute>
+        ),
+      },
+    ],
   },
   {
-    path:'*',
-    Component:ErrorPage
-  }
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <p>Hello Dashboard</p>,
+      },
+      {
+        path: "add-property",
+        element: <AddProperty />,
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
+  },
 ]);

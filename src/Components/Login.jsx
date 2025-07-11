@@ -64,13 +64,15 @@ const Login = () => {
     <div className="flex items-center justify-center mt-4 py-8">
      
               <title>Log In</title>
+              
              
       <div className="hero">
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
           <div className="card-body">
-            <h1 className="font-bold text-center text-2xl">
-              Login 
+            <h1 className="font-bold text-center text-xl">
+              Welcome Back to PropertyPulse Login
             </h1>
+            
 
             <form onSubmit={handleSignIn} className="fieldset">
               <label className="label">Email</label>

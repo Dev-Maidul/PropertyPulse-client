@@ -7,7 +7,7 @@ import PrivateRoute from '../Context/PrivateRoute';
 import AllProperties from "../Pages/AllProperties/AllProperties";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import Login from "../Components/Login";
-import Register from "../Components/Register";
+import Register from "../Components/Signup";
 
 export const router = createBrowserRouter([
   {
@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
             Component:Login
         },
         {
-            path:'/register',
+            path:'/signup',
             Component:Register
         },
         {

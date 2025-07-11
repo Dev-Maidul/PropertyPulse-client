@@ -8,6 +8,7 @@ import AllProperties from "../Pages/AllProperties/AllProperties";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import Login from "../Components/Login";
 import Register from "../Components/Signup";
+import ErrorPage from "../Components/ErrorPage";
 
 export const router = createBrowserRouter([
   {
@@ -36,4 +37,8 @@ export const router = createBrowserRouter([
         },
     ]
   },
+  {
+    path:'*',
+    Component:ErrorPage
+  }
 ]);

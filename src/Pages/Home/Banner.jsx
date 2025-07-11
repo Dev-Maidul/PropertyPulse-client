@@ -31,11 +31,11 @@ const BannerSlider = () => {
       >
         {slides.map((imgSrc, index) => (
           <SwiperSlide key={index}>
-            <div className="w-full h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] overflow-hidden rounded-2xl object-cover">
+            <div className="w-full h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] overflow-hidden rounded-2xl ">
               <img
                 src={imgSrc}
                 alt={`Banner ${index + 1}`}
-                className="w-full h-full object-cover rounded-2xl"
+                className="w-full h-full  rounded-2xl"
                 onError={(e) => {
                   e.target.src = "https://placehold.co/1200x700?text=Image+Not+Found";
                   e.target.onerror = null;

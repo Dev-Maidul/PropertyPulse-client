@@ -1,142 +1,216 @@
 // src/Dashboard/Agent/AddProperty.jsx
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../Context/AuthProvider";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const AddProperty = () => {
-  const { user, role } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
+
+  // Initial form state
   const [formData, setFormData] = useState({
     title: "",
-    description: "",
-    price: "",
     location: "",
-    photoURL: "",
-    status: "available",
+    image: null,
+    agentName: user?.displayName || "Unknown User",
+    agentEmail: user?.email || "unknown@example.com",
+    priceRange: "",
   });
 
+  const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Handle input fields
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle image file
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, image: file }));
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!["agent", "admin"].includes(role)) {
-      alert("You do not have permission to add properties!");
+    setError(null);
+
+    if (!formData.title || !formData.location || !formData.image || !formData.priceRange) {
+      setError("All fields are required!");
       return;
     }
+
+    setLoading(true);
+
+    // Upload image to ImgBB
+    const imageData = new FormData();
+    imageData.append("image", formData.image);
+
+    let imageUrl = "";
     try {
-      const token = localStorage.getItem("token"); // Adjust based on your auth flow
-      const response = await fetch("http://localhost:5000/api/properties/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert("Property added successfully!");
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+        imageData
+      );
+      imageUrl = response.data.data.url;
+    } catch (imgError) {
+      console.error(imgError);
+      setError("Image upload failed. Please try again.");
+      setLoading(false);
+      return;
+    }
+
+    // Construct property object to send
+    const propertyData = {
+      title: formData.title,
+      location: formData.location,
+      agentName: formData.agentName,
+      agentEmail: formData.agentEmail,
+      priceRange: formData.priceRange,
+      imageUrl,
+      status: "Available", // auto-added
+      views: 0,            // auto-added
+      postedAt: new Date().toISOString(), // auto-added
+    };
+
+    try {
+      const response = await axiosSecure.post("/add-property", propertyData);
+      if (response.data.acknowledged) {
+        toast.success("Property added successfully!");
         setFormData({
           title: "",
-          description: "",
-          price: "",
           location: "",
-          photoURL: "",
-          status: "available",
+          image: null,
+          agentName: user?.displayName || "Unknown User",
+          agentEmail: user?.email || "unknown@example.com",
+          priceRange: "",
         });
+        setImagePreview(null);
       } else {
-        throw new Error(data.message || "Failed to add property");
+        throw new Error(response.data.message || "Failed to add property");
       }
     } catch (error) {
-      console.error("Error adding property: ", error);
-      alert("Failed to add property. Please try again.");
+      console.error("Error adding property:", error);
+      setError(error?.message || "Failed to add property. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="p-6 bg-property-bg min-h-screen">
-      <h2 className="text-2xl md:text-3xl font-bold text-property-text text-center mb-6">
+    <div className="p-6 bg-[#E6F0FA] min-h-screen">
+      <h2 className="text-2xl md:text-3xl font-bold text-[#1E3A8A] text-center mb-6">
         Add New Property
       </h2>
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Title */}
           <div>
-            <label className="block text-property-text text-sm md:text-base">Title</label>
+            <label className="block text-[#1E3A8A]">Property Title</label>
             <input
               type="text"
               name="title"
               value={formData.title}
               onChange={handleChange}
-              className="input w-full bg-gray-50 border-gray-300 rounded-md focus:border-property-secondary focus:ring-property-secondary"
-              placeholder="Property Title"
+              className="input w-full"
+              placeholder="Enter property title"
               required
             />
           </div>
+
+          {/* Location */}
           <div>
-            <label className="block text-property-text text-sm md:text-base">Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="input w-full bg-gray-50 border-gray-300 rounded-md focus:border-property-secondary focus:ring-property-secondary h-24"
-              placeholder="Property Description"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-property-text text-sm md:text-base">Price</label>
-            <input
-              type="number"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              className="input w-full bg-gray-50 border-gray-300 rounded-md focus:border-property-secondary focus:ring-property-secondary"
-              placeholder="Price (e.g., 50000)"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-property-text text-sm md:text-base">Location</label>
+            <label className="block text-[#1E3A8A]">Property Location</label>
             <input
               type="text"
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className="input w-full bg-gray-50 border-gray-300 rounded-md focus:border-property-secondary focus:ring-property-secondary"
-              placeholder="Location"
+              className="input w-full"
+              placeholder="Enter location"
               required
             />
           </div>
+
+          {/* Image */}
           <div>
-            <label className="block text-property-text text-sm md:text-base">Photo URL</label>
+            <label className="block text-[#1E3A8A]">Property Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="input w-full"
+              required
+            />
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="mt-2 w-32 h-32 object-cover rounded-md"
+              />
+            )}
+          </div>
+
+          {/* Agent Name */}
+          <div>
+            <label className="block text-[#1E3A8A]">Agent Name</label>
             <input
               type="text"
-              name="photoURL"
-              value={formData.photoURL}
+              name="agentName"
+              value={formData.agentName}
+              readOnly
+              className="input w-full bg-gray-100"
+            />
+          </div>
+
+          {/* Agent Email */}
+          <div>
+            <label className="block text-[#1E3A8A]">Agent Email</label>
+            <input
+              type="email"
+              name="agentEmail"
+              value={formData.agentEmail}
+              readOnly
+              className="input w-full bg-gray-100"
+            />
+          </div>
+
+          {/* Price Range */}
+          <div>
+            <label className="block text-[#1E3A8A]">Price Range</label>
+            <input
+              type="text"
+              name="priceRange"
+              value={formData.priceRange}
               onChange={handleChange}
-              className="input w-full bg-gray-50 border-gray-300 rounded-md focus:border-property-secondary focus:ring-property-secondary"
-              placeholder="Photo URL"
+              className="input w-full"
+              placeholder="e.g. $50,000 - $100,000"
               required
             />
           </div>
-          <div>
-            <label className="block text-property-text text-sm md:text-base">Status</label>
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="input w-full bg-gray-50 border-gray-300 rounded-md focus:border-property-secondary focus:ring-property-secondary"
-            >
-              <option value="available">Available</option>
-              <option value="sold">Sold</option>
-            </select>
-          </div>
+
+          {/* Error Alert */}
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          {/* Submit Button */}
           <button
             type="submit"
-            className="btn w-full bg-black text-white hover:bg-opacity-80 rounded-md text-lg transition-colors duration-300"
-            // disabled={!["agent", "admin"].includes(role)}
+            className={`btn w-full bg-[#10B981] text-white rounded-md text-lg transition duration-300 ${
+              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-opacity-80"
+            }`}
+            disabled={loading}
           >
-            Add Property
+            {loading ? "Adding..." : "Add Property"}
           </button>
         </form>
       </div>

@@ -1,10 +1,12 @@
-import React from 'react';
-import useAuth from '../../Hooks/useAuth';
-import useAxiosSecure from '../../Hooks/useAxiosSecure';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import { motion } from 'framer-motion';
+import React from "react";
+import useAuth from "../../Hooks/useAuth";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+import Spinner from "../../Shared/Spinner";
+import Swal from "sweetalert2";
 
 const MyAddedProperties = () => {
   const { user } = useAuth();
@@ -13,9 +15,11 @@ const MyAddedProperties = () => {
   const navigate = useNavigate();
 
   const { data: properties = [], isLoading } = useQuery({
-    queryKey: ['my-added-properties', user?.email],
+    queryKey: ["my-added-properties", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/agent/properties?email=${user.email}`);
+      const res = await axiosSecure.get(
+        `/agent/properties?email=${user.email}`
+      );
       return Array.isArray(res.data) ? res.data : [];
     },
     enabled: !!user?.email,
@@ -26,20 +30,24 @@ const MyAddedProperties = () => {
       await axiosSecure.delete(`/agent/property/${id}`);
     },
     onSuccess: () => {
-      toast.success('Property Deleted!');
-      queryClient.invalidateQueries(['my-added-properties', user?.email]);
+      toast.success("Property Deleted!");
+      queryClient.invalidateQueries(["my-added-properties", user?.email]);
     },
-    onError: () => toast.error('Delete failed!'),
+    onError: () => toast.error("Delete failed!"),
   });
 
-  if (isLoading) return <div className="text-center py-10">Loading...</div>;
+  if (isLoading) return Spinner;
 
   return (
     <div className="p-4 cursor-pointer">
-      <h2 className="text-2xl font-bold mb-4 text-[#1E3A8A]">My Added Properties</h2>
+      <h2 className="text-2xl font-bold mb-4 text-[#1E3A8A]">
+        My Added Properties
+      </h2>
       <div className="grid md:grid-cols-2 gap-8">
         {properties.length === 0 && (
-          <div className="text-center text-gray-500 mt-10 col-span-2">No properties found.</div>
+          <div className="text-center text-gray-500 mt-10 col-span-2">
+            No properties found.
+          </div>
         )}
         {properties.map((property) => (
           <motion.div
@@ -55,16 +63,22 @@ const MyAddedProperties = () => {
                 src={property.imageUrl}
                 alt={property.title}
                 className="object-cover w-full h-full"
-                style={{ minHeight: '180px', maxHeight: '250px' }}
-                onError={e => { e.target.src = "https://i.ibb.co/2d9dKqk/placeholder-house.png"; }}
+                style={{ minHeight: "180px", maxHeight: "250px" }}
+                onError={(e) => {
+                  e.target.src =
+                    "https://i.ibb.co/2d9dKqk/placeholder-house.png";
+                }}
               />
             </div>
             {/* Card Content */}
             <div className="flex-1 p-5 flex flex-col justify-between">
               <div>
-                <h3 className="text-xl font-bold text-[#1E3A8A] mb-1">{property.title}</h3>
+                <h3 className="text-xl font-bold text-[#1E3A8A] mb-1">
+                  {property.title}
+                </h3>
                 <p className="text-gray-700 mb-1">
-                  <span className="font-semibold">Location:</span> {property.location}
+                  <span className="font-semibold">Location:</span>{" "}
+                  {property.location}
                 </p>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-semibold">Agent:</span>
@@ -74,7 +88,10 @@ const MyAddedProperties = () => {
                       src={property.agentImage}
                       alt="Agent"
                       className="w-8 h-8 rounded-full border border-gray-300"
-                      onError={e => { e.target.src = "https://i.ibb.co/2d9dKqk/placeholder-house.png"; }}
+                      onError={(e) => {
+                        e.target.src =
+                          "https://i.ibb.co/2d9dKqk/placeholder-house.png";
+                      }}
                     />
                   )}
                 </div>
@@ -89,7 +106,10 @@ const MyAddedProperties = () => {
                         : "text-yellow-600 font-semibold"
                     }
                   >
-                    {property.status ? property.status.charAt(0).toUpperCase() + property.status.slice(1) : "Pending"}
+                    {property.status
+                      ? property.status.charAt(0).toUpperCase() +
+                        property.status.slice(1)
+                      : "Pending"}
                   </span>
                 </div>
                 <div className="mb-1">
@@ -98,23 +118,41 @@ const MyAddedProperties = () => {
                 </div>
                 {(property.minPrice || property.maxPrice) && (
                   <div className="mb-1">
-                    <span className="font-semibold">Min:</span> {property.minPrice || "-"}{" "}
-                    <span className="font-semibold ml-2">Max:</span> {property.maxPrice || "-"}
+                    <span className="font-semibold">Min:</span>{" "}
+                    {property.minPrice || "-"}{" "}
+                    <span className="font-semibold ml-2">Max:</span>{" "}
+                    {property.maxPrice || "-"}
                   </div>
                 )}
               </div>
               <div className="flex gap-3 mt-4">
-                {property.status !== "rejected" && (
-                  <button
-                    className="px-4 py-1 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition cursor-pointer"
-                    onClick={() => navigate(`/dashboard/update-property/${property._id}`)}
-                  >
-                    Update
-                  </button>
-                )}
+                <button
+                  className={`px-4 py-1 rounded bg-blue-600 text-white font-semibold transition
+                    ${property.status === "rejected" ? "opacity-60 cursor-not-allowed" : "hover:bg-blue-700 cursor-pointer"}`}
+                  onClick={() =>
+                    navigate(`/dashboard/update-property/${property._id}`)
+                  }
+                  disabled={property.status === "rejected"}
+                >
+                  Update
+                </button>
                 <button
                   className="px-4 py-1 rounded bg-red-500 text-white font-semibold hover:bg-red-600 transition cursor-pointer"
-                  onClick={() => deleteMutation.mutate(property._id)}
+                  onClick={() => {
+                    Swal.fire({
+                      title: "Are you sure to Delete?",
+                      text: "Property will be deleted Permanently!",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Yes, delete it!",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        deleteMutation.mutate(property._id);
+                      }
+                    });
+                  }}
                 >
                   Delete
                 </button>

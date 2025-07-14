@@ -1,4 +1,4 @@
-// src/Dashboard/Agent/AddProperty.jsx
+
 import React, { useContext, useState, useRef } from "react";
 import { AuthContext } from "../../Context/AuthProvider";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
@@ -119,7 +119,7 @@ const AddProperty = () => {
       <h2 className="text-2xl md:text-3xl font-bold text-[#1E3A8A] text-center mb-6">
         Add New Property
       </h2>
-      <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      <div className="w-full mx-auto bg-white p-6 rounded-lg shadow-md">
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>

@@ -54,7 +54,7 @@ export const router = createBrowserRouter([
         element: <AddProperty />,
       },
       {
-        path:'my-addedProperties',
+        path:'my-added-properties',
         element:<MyAddedProperties></MyAddedProperties>
       }
     ],

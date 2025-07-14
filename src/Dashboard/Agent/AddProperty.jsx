@@ -1,5 +1,5 @@
 // src/Dashboard/Agent/AddProperty.jsx
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { AuthContext } from "../../Context/AuthProvider";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import axios from "axios";
@@ -8,6 +8,9 @@ import toast from "react-hot-toast";
 const AddProperty = () => {
   const { user } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
+
+  // Ref for file input
+  const fileInputRef = useRef(null);
 
   // Initial form state
   const [formData, setFormData] = useState({
@@ -63,7 +66,6 @@ const AddProperty = () => {
         imageData
       );
       imageUrl = response.data.data.url;
-      imageUrl = ""
     } catch (imgError) {
       console.error(imgError);
       setError("Image upload failed. Please try again.");
@@ -97,6 +99,10 @@ const AddProperty = () => {
           priceRange: "",
         });
         setImagePreview(null);
+        // Reset file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       } else {
         throw new Error(response.data.message || "Failed to add property");
       }
@@ -152,6 +158,7 @@ const AddProperty = () => {
               onChange={handleImageChange}
               className="input w-full"
               required
+              ref={fileInputRef}
             />
             {imagePreview && (
               <img

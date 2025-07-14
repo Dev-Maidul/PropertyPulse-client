@@ -13,11 +13,10 @@ import UserMenu from "./User/UserMenu";
 import AgentMenu from "./Agent/AgentMenu";
 import AdminMenu from "./Admin/AdminMenu";
 
-
 const DashboardLayout = () => {
   const { user, logout } = useAuth();
   const [role, isRoleLoading] = useRole();
-  console.log(role);
+
   if (isRoleLoading) return <Spinner />;
 
   // Utility function for class names
@@ -45,10 +44,10 @@ const DashboardLayout = () => {
   };
 
   // Menu renderer
-  const renderMenu = (classNamesFn) => {
-    if (role === "admin") return <AdminMenu classNames={classNamesFn} />;
-    if (role === "agent") return <AgentMenu classNames={classNamesFn} />;
-    return <UserMenu classNames={classNamesFn} />;
+  const renderMenu = (classNamesFn, onItemClick) => {
+    if (role === "admin") return <AdminMenu classNames={classNamesFn} onItemClick={onItemClick} />;
+    if (role === "agent") return <AgentMenu classNames={classNamesFn} onItemClick={onItemClick} />;
+    return <UserMenu classNames={classNamesFn} onItemClick={onItemClick} />;
   };
 
   return (
@@ -56,8 +55,8 @@ const DashboardLayout = () => {
       {/* Mobile Menu Button */}
       <div className="md:hidden fixed top-4 left-4 z-40">
         <Disclosure>
-          {({ open }) => (
-            <>
+          {({ open, close }) => (
+            <div>
               <Disclosure.Button
                 className="p-2 rounded-md bg-[#1E3A8A] text-white focus:outline-none focus:ring-2 focus:ring-[#10B981]"
                 aria-label={open ? "Close menu" : "Open menu"}
@@ -71,7 +70,11 @@ const DashboardLayout = () => {
 
               <Disclosure.Panel className="fixed inset-y-0 left-0 w-64 bg-[#1E3A8A] text-white shadow-lg rounded-r-lg z-30 p-4">
                 <div className="flex flex-col items-center mb-6">
-                  <Link to="/" className="flex items-center justify-center mb-4">
+                  <Link
+                    to="/"
+                    className="flex items-center justify-center mb-4"
+                    onClick={close}
+                  >
                     <img
                       src={logo}
                       alt="PropertyPulse Logo"
@@ -80,18 +83,23 @@ const DashboardLayout = () => {
                     <span className="text-xl font-bold">PropertyPulse</span>
                   </Link>
                   <ul className="w-full space-y-2">
-                    {renderMenu(({ isActive }) =>
-                      classNames(
-                        isActive
-                          ? "bg-[#10B981] text-white"
-                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "flex items-center space-x-3 w-full text-left rounded-md px-3 py-2 text-base font-medium transition-colors duration-200"
-                      )
+                    {renderMenu(
+                      ({ isActive }) =>
+                        classNames(
+                          isActive
+                            ? "bg-[#10B981] text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "flex items-center space-x-3 w-full text-left rounded-md px-3 py-2 text-base font-medium transition-colors duration-200"
+                        ),
+                      close // Pass close as onItemClick
                     )}
                     <li>
                       <Disclosure.Button
                         as="button"
-                        onClick={handleLogout}
+                        onClick={() => {
+                          handleLogout();
+                          close();
+                        }}
                         className="flex items-center space-x-3 w-full text-left text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-base font-medium transition-colors duration-200"
                         aria-label="Logout"
                       >
@@ -104,19 +112,20 @@ const DashboardLayout = () => {
                     to="/"
                     className="mt-4 block text-center text-gray-300 hover:text-white underline"
                     aria-label="Go to Home"
+                    onClick={close}
                   >
                     Back to Home
                   </Link>
                 </div>
               </Disclosure.Panel>
-            </>
+            </div>
           )}
         </Disclosure>
       </div>
 
       {/* Sidebar for Desktop */}
       <motion.div
-        className="hidden md:flex flex-col w-64 bg-[#1E3A8A] text-white shadow-lg p-6 min-h-screen"
+        className="hidden md:flex flex-col w-68 bg-[#1E3A8A] text-white shadow-lg p-6 min-h-screen"
         initial="hidden"
         animate="visible"
         variants={sidebarVariants}
@@ -133,13 +142,15 @@ const DashboardLayout = () => {
         </Link>
 
         <ul className="flex flex-col space-y-2 flex-grow">
-          {renderMenu(({ isActive }) =>
-            classNames(
-              isActive
-                ? "bg-[#10B981] text-white"
-                : "text-white hover:bg-gray-700 hover:text-white",
-              "flex items-center space-x-3 rounded-md px-3 py-2 text-base font-medium transition-colors duration-200 ease-in-out"
-            )
+          {renderMenu(
+            ({ isActive }) =>
+              classNames(
+                isActive
+                  ? "bg-[#10B981] text-white"
+                  : "text-white hover:bg-gray-700 hover:text-white",
+                "flex items-center space-x-3 rounded-md px-3 py-2 text-base font-medium transition-colors duration-200 ease-in-out"
+              ),
+            undefined // No need to close on desktop
           )}
           <li>
             <button
@@ -166,7 +177,7 @@ const DashboardLayout = () => {
 
       {/* Main Content Area */}
       <motion.main
-        className="flex-1 p-6 md:p-8 overflow-y-auto bg-white rounded-lg shadow-inner"
+        className="flex-1 p-6 md:p-8 overflow-y-auto bg-white rounded-lg shadow-inner ml-4"
         initial="hidden"
         animate="visible"
         variants={contentVariants}

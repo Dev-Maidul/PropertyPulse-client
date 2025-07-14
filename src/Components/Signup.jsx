@@ -23,6 +23,13 @@ const Signup = () => {
         const user = result.user;
         const name = user.displayName;
         const photoURL = user.photoURL;
+
+        const userData = {
+        name: result?.user?.displayName,
+        email: result?.user?.email,
+        image: result?.user?.photoURL,
+      }
+      saveUserInDb(userData)
         updateUser({ displayName: name, photoURL })
           .then(() => {
             setUser({ ...user, displayName: name, photoURL });
@@ -78,7 +85,7 @@ const Signup = () => {
       }
       // Save user data in db
        saveUserInDb(userData)
-       
+
         toast.success("Registration Successful");
         updateUser({ displayName: name, photoURL: photo })
           .then(() => {

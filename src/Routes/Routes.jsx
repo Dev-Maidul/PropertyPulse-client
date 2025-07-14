@@ -1,13 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../Layouts/MainLayout";
 import Home from "../Pages/Home/Home";
-import PrivateRoute from "../Context/PrivateRoute";
 import AllProperties from "../Pages/AllProperties/AllProperties";
 import DashboardLayout from "../Pages/Dashboard/DashboardLayout";
 import Login from "../Components/Login";
 import Register from "../Components/Signup";
 import ErrorPage from "../Components/ErrorPage";
 import AddProperty from "../Dashboard/Agent/AddProperty";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -29,9 +29,9 @@ export const router = createBrowserRouter([
       {
         path: "/all-properties",
         element: (
-          <PrivateRoute>
-            <AllProperties />
-          </PrivateRoute>
+          
+            <PrivateRoute><AllProperties /></PrivateRoute>
+         
         ),
       },
     ],

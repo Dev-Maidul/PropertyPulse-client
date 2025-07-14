@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthProvider";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion"; // Added for animations
+import { saveUserInDb } from "../API/utils";
 
 const Signup = () => {
   const { CreateUser, setUser, updateUser, googleSignIn } = useContext(AuthContext);
@@ -69,6 +70,15 @@ const Signup = () => {
     CreateUser(email, password)
       .then((result) => {
         const user = result.user;
+        console.log(user);
+        const userData = {
+        name:user.displayName,
+        email,
+        image: user.photoURL,
+      }
+      // Save user data in db
+       saveUserInDb(userData)
+       
         toast.success("Registration Successful");
         updateUser({ displayName: name, photoURL: photo })
           .then(() => {

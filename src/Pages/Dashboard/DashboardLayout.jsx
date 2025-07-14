@@ -3,42 +3,22 @@ import { Link, Outlet, NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Disclosure } from "@headlessui/react";
-import {
-  FaHome,
-  FaUser,
-  FaUserShield,
-  FaSignOutAlt,
-  FaPlus,
-  FaList,
-  FaShoppingCart,
-  FaStar,
-  FaChartLine,
-  FaAd,
-} from "react-icons/fa";
-import useAuth from "../../Hooks/useAuth";
+import { FaSignOutAlt } from "react-icons/fa";
 import logo from "../../assets/Logo.png";
+
+import Spinner from "../../Shared/Spinner";
+import useAuth from "../../Hooks/useAuth";
+import useRole from "../../Hooks/useRole";
+import UserMenu from "./User/UserMenu";
+import AgentMenu from "./Agent/AgentMenu";
+import AdminMenu from "./Admin/AdminMenu";
+
 
 const DashboardLayout = () => {
   const { user, logout } = useAuth();
-
-  // All menu items (no role-based filtering for now)
-  const navItems = [
-    { name: "My Profile", href: "/dashboard/my-profile", icon: FaUser },
-    { name: "Wishlist", href: "/dashboard/wishlist", icon: FaList },
-    { name: "Property Bought", href: "/dashboard/property-bought", icon: FaShoppingCart },
-    { name: "My Reviews", href: "/dashboard/my-reviews", icon: FaStar },
-    { name: "Agent Profile", href: "/dashboard/agent-profile", icon: FaUser },
-    { name: "Add Property", href: "/dashboard/add-property", icon: FaPlus },
-    { name: "My Added Properties", href: "/dashboard/my-added-properties", icon: FaList },
-    { name: "My Sold Properties", href: "/dashboard/my-sold-properties", icon: FaShoppingCart },
-    { name: "Requested Properties", href: "/dashboard/requested-properties", icon: FaList },
-    { name: "Admin Profile", href: "/dashboard/admin-profile", icon: FaUserShield },
-    { name: "Manage Properties", href: "/dashboard/manage-properties", icon: FaList },
-    { name: "Manage Users", href: "/dashboard/manage-users", icon: FaUser },
-    { name: "Manage Reviews", href: "/dashboard/manage-reviews", icon: FaStar },
-    { name: "Reported Property", href: "/dashboard/reported-property", icon: FaAd },
-    { name: "Advertise Property", href: "/dashboard/advertise-property", icon: FaAd },
-  ];
+  const [role, isRoleLoading] = useRole();
+  console.log(role);
+  if (isRoleLoading) return <Spinner />;
 
   // Utility function for class names
   const classNames = (...classes) =>
@@ -55,11 +35,6 @@ const DashboardLayout = () => {
     visible: { opacity: 1, scale: 1, transition: { delay: 0.3, duration: 0.5 } },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
-  };
-
   // Handle logout
   const handleLogout = async () => {
     try {
@@ -67,6 +42,13 @@ const DashboardLayout = () => {
     } catch (error) {
       console.error("Logout failed:", error);
     }
+  };
+
+  // Menu renderer
+  const renderMenu = (classNamesFn) => {
+    if (role === "admin") return <AdminMenu classNames={classNamesFn} />;
+    if (role === "agent") return <AgentMenu classNames={classNamesFn} />;
+    return <UserMenu classNames={classNamesFn} />;
   };
 
   return (
@@ -98,26 +80,14 @@ const DashboardLayout = () => {
                     <span className="text-xl font-bold">PropertyPulse</span>
                   </Link>
                   <ul className="w-full space-y-2">
-                    {navItems.map((item) => (
-                      <li key={item.name}>
-                        <Disclosure.Button
-                          as={NavLink}
-                          to={item.href}
-                          className={({ isActive }) =>
-                            classNames(
-                              isActive
-                                ? "bg-[#10B981] text-white"
-                                : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                              "flex items-center space-x-3 w-full text-left rounded-md px-3 py-2 text-base font-medium transition-colors duration-200"
-                            )
-                          }
-                          aria-label={`Go to ${item.name}`}
-                        >
-                          <item.icon size={18} />
-                          <span>{item.name}</span>
-                        </Disclosure.Button>
-                      </li>
-                    ))}
+                    {renderMenu(({ isActive }) =>
+                      classNames(
+                        isActive
+                          ? "bg-[#10B981] text-white"
+                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                        "flex items-center space-x-3 w-full text-left rounded-md px-3 py-2 text-base font-medium transition-colors duration-200"
+                      )
+                    )}
                     <li>
                       <Disclosure.Button
                         as="button"
@@ -163,26 +133,15 @@ const DashboardLayout = () => {
         </Link>
 
         <ul className="flex flex-col space-y-2 flex-grow">
-          {navItems.map((item) => (
-            <motion.li key={item.name} variants={itemVariants}>
-              <NavLink
-                to={item.href}
-                className={({ isActive }) =>
-                  classNames(
-                    isActive
-                      ? "bg-[#10B981] text-white"
-                      : "text-white hover:bg-gray-700 hover:text-white",
-                    "flex items-center space-x-3 rounded-md px-3 py-2 text-base font-medium transition-colors duration-200 ease-in-out"
-                  )
-                }
-                aria-label={`Go to ${item.name}`}
-              >
-                <item.icon size={18} />
-                <span>{item.name}</span>
-              </NavLink>
-            </motion.li>
-          ))}
-          <motion.li variants={itemVariants}>
+          {renderMenu(({ isActive }) =>
+            classNames(
+              isActive
+                ? "bg-[#10B981] text-white"
+                : "text-white hover:bg-gray-700 hover:text-white",
+              "flex items-center space-x-3 rounded-md px-3 py-2 text-base font-medium transition-colors duration-200 ease-in-out"
+            )
+          )}
+          <li>
             <button
               onClick={handleLogout}
               className="flex items-center space-x-3 w-full text-left text-white hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-base font-medium transition-colors duration-200 ease-in-out"
@@ -191,7 +150,7 @@ const DashboardLayout = () => {
               <FaSignOutAlt size={18} />
               <span>Logout</span>
             </button>
-          </motion.li>
+          </li>
         </ul>
 
         <div className="mt-8 pt-4 border-t border-gray-700">

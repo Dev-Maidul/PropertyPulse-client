@@ -63,6 +63,7 @@ const AddProperty = () => {
         imageData
       );
       imageUrl = response.data.data.url;
+      imageUrl = ""
     } catch (imgError) {
       console.error(imgError);
       setError("Image upload failed. Please try again.");
@@ -78,7 +79,7 @@ const AddProperty = () => {
       agentEmail: formData.agentEmail,
       priceRange: formData.priceRange,
       imageUrl,
-      status: "Available", // auto-added
+      status: "Pending", // auto-added
       views: 0,            // auto-added
       postedAt: new Date().toISOString(), // auto-added
     };

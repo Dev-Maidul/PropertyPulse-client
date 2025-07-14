@@ -8,6 +8,7 @@ import Register from "../Components/Signup";
 import ErrorPage from "../Components/ErrorPage";
 import AddProperty from "../Dashboard/Agent/AddProperty";
 import PrivateRoute from "./PrivateRoute";
+import MyAddedProperties from "../Dashboard/Agent/MyAddedProperties";
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ export const router = createBrowserRouter([
         path: "add-property",
         element: <AddProperty />,
       },
+      {
+        path:'my-addedProperties',
+        element:<MyAddedProperties></MyAddedProperties>
+      }
     ],
   },
   {

@@ -4,7 +4,7 @@ import { FaUser, FaPlus, FaList, FaShoppingCart } from "react-icons/fa";
 const AgentMenu = ({ classNames, onItemClick }) => (
   <>
     <li>
-      <NavLink to="/dashboard/agent-profile" className={classNames} onClick={onItemClick}>
+      <NavLink to="/dashboard/profile" className={classNames} onClick={onItemClick}>
         <FaUser size={18} />
         <span>Agent Profile</span>
       </NavLink>

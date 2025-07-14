@@ -10,6 +10,7 @@ import AddProperty from "../Dashboard/Agent/AddProperty";
 import PrivateRoute from "./PrivateRoute";
 import MyAddedProperties from "../Dashboard/Agent/MyAddedProperties";
 import UpdateProperty from "../Dashboard/Agent/UpdateProperty";
+import Profile from "../Dashboard/Profile/Profile";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
       {
         path:'update-property/:id',
         element:<UpdateProperty></UpdateProperty>
+      },
+      {
+        path:'profile',
+        element:<Profile></Profile>
       }
     ],
   },

@@ -5,12 +5,14 @@ import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import useAuth from '../../../Hooks/useAuth';
 import Spinner from '../../../Shared/Spinner';
 import WishlistCard from './WishlistCard';
+import { useNavigate } from 'react-router';
+
 
 const Wishlist = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const queryClient = useQueryClient();
-
+    const navigate = useNavigate();
   // Fetch wishlist properties
   const { data: properties = [], isLoading } = useQuery({
     queryKey: ['wishlist', user.email],
@@ -40,11 +42,11 @@ const Wishlist = () => {
   });
 
   // Make an offer handler (you can implement modal or redirect)
-  const handleOffer = (property) => {
-    toast('Make an offer clicked! (Implement your logic here)');
-  };
+const handleOffer = (property) => {
+  navigate(`/dashboard/make-offer/${property._id}`, { state: { property } });
+};
 
-  if (isLoading) return Spinner;
+  if (isLoading) return <Spinner></Spinner>;
 
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 py-8">

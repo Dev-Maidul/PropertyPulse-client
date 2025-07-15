@@ -28,7 +28,8 @@ const WishlistCard = ({ property, onRemove, onOffer }) => {
           </div>
           <div className="flex items-center gap-4 mb-2">
             <span className="text-lg font-semibold text-property-secondary">
-              ৳ {property.priceRange}
+             Price 
+             Range ৳ {property.priceRange}
             </span>
             <span className={`px-3 py-1 rounded-full text-xs font-semibold
               ${property.status === "Verified" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}

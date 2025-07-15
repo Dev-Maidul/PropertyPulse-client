@@ -12,6 +12,7 @@ import MyAddedProperties from "../Dashboard/Agent/MyAddedProperties";
 import UpdateProperty from "../Dashboard/Agent/UpdateProperty";
 import Profile from "../Dashboard/Profile/Profile";
 import PropertyDetails from "../Pages/AllProperties/PropertyDetails";
+import Wishlist from "../Pages/Dashboard/User/Wishlist";
 
 export const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ export const router = createBrowserRouter([
       {
         path:'profile',
         element:<Profile></Profile>
+      },
+      {
+        path:'/dashboard/wishlist',
+        element:<Wishlist></Wishlist>
       }
     ],
   },

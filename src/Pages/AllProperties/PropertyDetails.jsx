@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-
 import CustomButton from '../../Shared/CustomButton';
-import { FaHeart, FaUserCircle, FaStar } from 'react-icons/fa';
+import { FaHeart, FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import ReviewModal from './ReviewModal'; // We'll create this below
+import ReviewModal from './ReviewModal';
 import toast from 'react-hot-toast';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import useAuth from '../../Hooks/useAuth';
 import Spinner from '../../Shared/Spinner';
-
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -53,7 +51,7 @@ const PropertyDetails = () => {
     }
   });
 
-  if (isLoading) return Spinner
+  if (isLoading) return <Spinner />;
   if (!property) return <div className="text-center py-20">Property not found.</div>;
 
   return (
@@ -66,7 +64,7 @@ const PropertyDetails = () => {
         <img
           src={property.imageUrl}
           alt={property.title}
-          className="w-full  h-100 object-cover rounded-lg shadow-md"
+          className="w-full h-120 object-cover rounded-lg shadow-md"
         />
         <div className="flex-1 flex flex-col justify-between">
           <div>
@@ -92,12 +90,21 @@ const PropertyDetails = () => {
             </div>
             <p className="text-gray-500 mb-2">Location: {property.location}</p>
           </div>
-          <div className="flex gap-4 mt-4">
+      
+          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-4">
             <CustomButton
               text="Add to Wishlist"
               color="red"
               onClick={() => addToWishlist.mutate()}
               icon={<FaHeart className="inline mr-2" />}
+              className="flex-1"
+            />
+            <CustomButton
+              text="Add a Review"
+              color="blue"
+              onClick={() => setShowReviewModal(true)}
+              icon={<FaStar className="inline mr-2" />}
+              className="flex-1"
             />
           </div>
         </div>
@@ -107,12 +114,6 @@ const PropertyDetails = () => {
       <div className="mt-10">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-2xl font-bold text-property-secondary">Reviews</h3>
-          <CustomButton
-            text="Add a Review"
-            color="blue"
-            onClick={() => setShowReviewModal(true)}
-            icon={<FaStar className="inline mr-2" />}
-          />
         </div>
         <div className="space-y-4">
           {reviews.length === 0 && (

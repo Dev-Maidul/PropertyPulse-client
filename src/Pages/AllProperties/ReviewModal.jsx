@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
-
 import toast from 'react-hot-toast';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
@@ -9,6 +8,11 @@ const ReviewModal = ({ propertyId, user, onClose, onSuccess }) => {
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const axiosSecure = useAxiosSecure();
+  const handleTextareaKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,6 +63,7 @@ const ReviewModal = ({ propertyId, user, onClose, onSuccess }) => {
           placeholder="Write your review..."
           value={comment}
           onChange={e => setComment(e.target.value)}
+          onKeyDown={handleTextareaKeyDown}
           required
         />
         <button

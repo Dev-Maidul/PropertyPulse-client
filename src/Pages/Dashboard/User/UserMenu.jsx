@@ -5,7 +5,7 @@ import { FaUser, FaList, FaShoppingCart, FaStar } from "react-icons/fa";
 const UserMenu = ({ classNames, onItemClick }) => (
   <>
     <li>
-      <NavLink to="/dashboard/my-profile" className={classNames} onClick={onItemClick}>
+      <NavLink to="/dashboard/profile" className={classNames} onClick={onItemClick}>
         <FaUser size={18} />
         <span>My Profile</span>
       </NavLink>

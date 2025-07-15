@@ -10,7 +10,7 @@ const Profile = () => {
   if (isRoleLoading) return Spinner
   return (
     <div className='flex justify-center items-center h-screen'>
-      <div className='bg-white shadow-lg rounded-2xl md:w-4/5 lg:w-3/5'>
+      <div className='w-full bg-white shadow-lg rounded-2xl md:w-4/5 lg:w-4/5'>
         <img
           alt='cover photo'
           src={cover}

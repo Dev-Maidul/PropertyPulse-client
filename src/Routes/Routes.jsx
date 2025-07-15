@@ -15,6 +15,7 @@ import PropertyDetails from "../Pages/AllProperties/PropertyDetails";
 import Wishlist from "../Pages/Dashboard/User/Wishlist";
 import MakeOffer from "../Pages/Dashboard/User/MakeOffer";
 import PropertyBought from "../Pages/Dashboard/User/PropertyBought";
+import PaymentPage from "../Shared/PaymentPage";
 
 export const router = createBrowserRouter([
   {
@@ -87,10 +88,15 @@ export const router = createBrowserRouter([
       {
         path:'/dashboard/property-bought',
         element:<PropertyBought></PropertyBought>
+      },
+      {
+        path:'/dashboard/payment/:offerId',
+        element:<PaymentPage></PaymentPage>
       }
       
     ],
   },
+ 
   {
     path: "*",
     element: <ErrorPage />,

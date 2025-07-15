@@ -57,16 +57,16 @@ const PropertyDetails = () => {
   if (!property) return <div className="text-center py-20">Property not found.</div>;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="w-full mx-auto px-4 py-8">
       <motion.div
-        className="bg-white rounded-xl shadow-lg p-6 flex flex-col md:flex-row gap-8"
+        className="bg-white rounded-xl shadow-lg p-6 flex flex-col md:flex-col gap-8"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
       >
         <img
           src={property.imageUrl}
           alt={property.title}
-          className="w-full md:w-2/5 h-72 object-cover rounded-lg shadow-md"
+          className="w-full  h-100 object-cover rounded-lg shadow-md"
         />
         <div className="flex-1 flex flex-col justify-between">
           <div>

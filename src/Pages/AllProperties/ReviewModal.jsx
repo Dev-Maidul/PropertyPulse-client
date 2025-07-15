@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
-import useAxiosSecure from '../../hooks/useAxiosSecure';
+
 import toast from 'react-hot-toast';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const ReviewModal = ({ propertyId, user, onClose, onSuccess }) => {
   const [rating, setRating] = useState(5);

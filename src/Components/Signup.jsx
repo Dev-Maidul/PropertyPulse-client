@@ -1,38 +1,36 @@
 import React, { useContext, useState } from "react";
-import { FaEyeSlash } from "react-icons/fa";
-import { FaRegEye } from "react-icons/fa";
+import { FaEyeSlash, FaRegEye } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthProvider";
 import toast from "react-hot-toast";
-import { motion } from "framer-motion"; // Added for animations
-import { saveUserInDb } from "../API/utils";
+import { motion } from "framer-motion";
+import { imageUpload, saveUserInDb } from "../API/utils";
 
 const Signup = () => {
   const { CreateUser, setUser, updateUser, googleSignIn } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || "/";
 
+  // Google Sign In
   const handleGoogleLogIn = () => {
     googleSignIn()
       .then((result) => {
-        console.log(result);
         const user = result.user;
-        const name = user.displayName;
-        const photoURL = user.photoURL;
-
         const userData = {
-        name: result?.user?.displayName,
-        email: result?.user?.email,
-        image: result?.user?.photoURL,
-      }
-      saveUserInDb(userData)
-        updateUser({ displayName: name, photoURL })
+          name: user.displayName,
+          email: user.email,
+          image: user.photoURL,
+        };
+        saveUserInDb(userData);
+        updateUser({ displayName: user.displayName, photoURL: user.photoURL })
           .then(() => {
-            setUser({ ...user, displayName: name, photoURL });
+            setUser({ ...user, displayName: user.displayName, photoURL: user.photoURL });
             navigate(from, { replace: true });
           })
           .catch((error) => {
@@ -45,63 +43,78 @@ const Signup = () => {
       });
   };
 
-  const handleSignup = (e) => {
+  // Email/Password Signup
+  const handleSignup = async (e) => {
     e.preventDefault();
+    setSuccess(false);
+    setErrorMessage("");
+    setLoading(true);
+
     const name = e.target.name.value;
-    const photo = e.target.photo.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
     const terms = e.target.terms.checked;
 
-    // Reset state
-    setSuccess(false);
-    setErrorMessage("");
-
+    // Password validation
     if (password.length < 6) {
       setErrorMessage("Password must be at least 6 characters");
+      setLoading(false);
       return;
     }
     if (!terms) {
       setErrorMessage("Please accept our terms and conditions");
+      setLoading(false);
+      return;
+    }
+    if (!/[a-z]/.test(password)) {
+      setErrorMessage("Password should contain at least one lowercase letter.");
+      setLoading(false);
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      setErrorMessage("Password should contain at least one uppercase letter.");
+      setLoading(false);
       return;
     }
 
-    if (!/[a-z]/.test(password)) {
-      setErrorMessage("Password should contain at least one lowercase letter.");
-      return;
-    } else if (!/[A-Z]/.test(password)) {
-      setErrorMessage("Password should contain at least one Uppercase letter.");
-      return;
+    let imageUrl = "https://i.ibb.co/2d9dK0F/default-profile.png";
+    // If user uploaded an image, upload to imgbb
+    if (imageFile) {
+      try {
+        imageUrl = await imageUpload(imageFile);
+      } catch (err) {
+        toast.error("Image upload failed! Default image will be used.");
+      }
     }
 
     CreateUser(email, password)
       .then((result) => {
         const user = result.user;
-        console.log(user);
         const userData = {
-        name:user.displayName,
-        email,
-        image: user.photoURL,
-      }
-      // Save user data in db
-       saveUserInDb(userData)
+          name: name || "Anonymous",
+          email,
+          image: imageUrl,
+        };
+        // Save user data in db
+        saveUserInDb(userData);
 
         toast.success("Registration Successful");
-        updateUser({ displayName: name, photoURL: photo })
+        updateUser({ displayName: name, photoURL: imageUrl })
           .then(() => {
-            setUser({ ...user, displayName: name, photoURL: photo });
+            setUser({ ...user, displayName: name, photoURL: imageUrl });
+            setSuccess(true);
+            setLoading(false);
             navigate(from, { replace: true });
           })
           .catch((error) => {
             setUser(user);
+            setLoading(false);
             console.log(error);
           });
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode);
-        alert(errorMessage);
+        setLoading(false);
+        setErrorMessage(error.message);
       });
   };
 
@@ -134,9 +147,10 @@ const Signup = () => {
                 <label className="label text-property-text">Photo</label>
                 <input
                   name="photo"
-                  type="text"
+                  type="file"
+                  accept="image/*"
                   className="input w-full bg-white text-property-text border-gray-300"
-                  placeholder="Photo Url"
+                  onChange={e => setImageFile(e.target.files[0])}
                 />
                 <label className="label text-property-text">Email</label>
                 <input
@@ -144,6 +158,7 @@ const Signup = () => {
                   type="email"
                   className="input w-full bg-white text-property-text border-gray-300"
                   placeholder="Your email"
+                  required
                 />
                 <label className="label text-property-text">Password</label>
                 <div className="relative">
@@ -152,8 +167,10 @@ const Signup = () => {
                     type={showPassword ? "text" : "password"}
                     className="input w-full bg-white text-property-text border-gray-300"
                     placeholder="Password"
+                    required
                   />
                   <button
+                    type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="btn btn-xs absolute top-3 right-3 text-property-text"
                   >
@@ -165,12 +182,20 @@ const Signup = () => {
                   <input name="terms" type="checkbox" className="checkbox mr-2" />
                   Accept Terms and Conditions
                 </label>
-                <button type="submit" className="btn btn-neutral mt-4 w-full bg-property-secondary text-white hover:bg-opacity-80">
-                  Register
+                <button
+                  type="submit"
+                  className="btn btn-neutral mt-4 w-full bg-property-secondary text-white hover:bg-opacity-80"
+                  disabled={loading}
+                >
+                  {loading ? "Registering..." : "Register"}
                 </button>
               </fieldset>
             </form>
-            <button onClick={handleGoogleLogIn} className="btn w-full mt-4 bg-white text-black border-gray-300 hover:bg-gray-100">
+            <button
+              onClick={handleGoogleLogIn}
+              className="btn w-full mt-4 bg-white text-black border-gray-300 hover:bg-gray-100"
+            >
+              {/* Google SVG */}
               <svg
                 aria-label="Google logo"
                 width="16"
@@ -216,10 +241,7 @@ const Signup = () => {
               animate="visible"
               variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
             >
-              <motion.div
-                className="mb-6 lg:mb-0"
-                variants={scaleUp}
-              >
+              <motion.div className="mb-6 lg:mb-0" variants={scaleUp}>
                 <svg
                   className="w-16 h-16 mx-auto text-property-secondary"
                   fill="currentColor"
@@ -229,10 +251,7 @@ const Signup = () => {
                 </svg>
                 <p className="mt-2 text-property-text">100+ Properties Listed</p>
               </motion.div>
-              <motion.div
-                className="mb-6 lg:mb-0"
-                variants={scaleUp}
-              >
+              <motion.div className="mb-6 lg:mb-0" variants={scaleUp}>
                 <svg
                   className="w-16 h-16 mx-auto text-property-secondary"
                   fill="currentColor"
@@ -242,9 +261,7 @@ const Signup = () => {
                 </svg>
                 <p className="mt-2 text-property-text">24/7 Support</p>
               </motion.div>
-              <motion.div
-                variants={scaleUp}
-              >
+              <motion.div variants={scaleUp}>
                 <svg
                   className="w-16 h-16 mx-auto text-property-secondary"
                   fill="currentColor"

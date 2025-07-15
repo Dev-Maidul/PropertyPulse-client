@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import CustomButton from '../../Shared/CustomButton';
+import { useNavigate } from 'react-router-dom';
 
 const PropertyCard = ({ property, onDetails }) => {
+    const navigate = useNavigate();
   return (
     <motion.div
       className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 border border-gray-100 hover:border-property-secondary group"
@@ -38,7 +40,11 @@ const PropertyCard = ({ property, onDetails }) => {
             Price Range: ৳ {property.priceRange}
           </span>
         </div>
-        <CustomButton></CustomButton>
+        <CustomButton
+  text="See Details"
+  color="blue"
+  onClick={() => navigate(`/property-details/${property._id}`)}
+/>
       </div>
     </motion.div>
   );

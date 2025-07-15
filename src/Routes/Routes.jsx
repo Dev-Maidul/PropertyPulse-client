@@ -11,6 +11,7 @@ import PrivateRoute from "./PrivateRoute";
 import MyAddedProperties from "../Dashboard/Agent/MyAddedProperties";
 import UpdateProperty from "../Dashboard/Agent/UpdateProperty";
 import Profile from "../Dashboard/Profile/Profile";
+import PropertyDetails from "../Pages/AllProperties/PropertyDetails";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +38,11 @@ export const router = createBrowserRouter([
          
         ),
       },
+      {
+        path:'/property-details/:id',
+        element:<PropertyDetails></PropertyDetails>
+
+      }
     ],
   },
   {

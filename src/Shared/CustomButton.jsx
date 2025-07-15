@@ -43,7 +43,7 @@ const CustomButton = ({
       `}
     >
       <span
-        className={`absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out ${colors.dot} rounded group-hover:-mr-4 group-hover:-mt-4`}
+        className={`absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out ${colors.dot} rounded group-hover:-mr-4 group-hover:-mt-4 cursor-pointer`}
       >
         <span className="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"></span>
       </span>

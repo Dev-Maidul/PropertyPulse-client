@@ -17,6 +17,7 @@ import MakeOffer from "../Pages/Dashboard/User/MakeOffer";
 import PropertyBought from "../Pages/Dashboard/User/PropertyBought";
 import PaymentPage from "../Shared/PaymentPage";
 import ManageProperties from "../Pages/Dashboard/Admin/ManageProperties";
+import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers";
 
 export const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ export const router = createBrowserRouter([
       {
         path:'/dashboard/manage-properties',
         element:<ManageProperties></ManageProperties>
+      },
+      {
+        path:'/dashboard/manage-users',
+        element:<ManageUsers></ManageUsers>
       },
       {
         path: "add-property",

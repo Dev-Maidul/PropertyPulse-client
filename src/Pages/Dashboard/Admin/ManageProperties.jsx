@@ -30,20 +30,20 @@ const ManageProperties = () => {
   });
 
   // Reject property mutation
-//   const rejectProperty = useMutation({
-//     mutationFn: async (id) => {
-//       return axiosSecure.patch(`/admin/properties/reject/${id}`);
-//     },
-//     onSuccess: () => {
-//       toast.error('Property rejected!');
-//       queryClient.invalidateQueries(['admin-properties']);
-//     }
-//   });
+  const rejectProperty = useMutation({
+    mutationFn: async (id) => {
+      return axiosSecure.patch(`/admin/properties/reject/${id}`);
+    },
+    onSuccess: () => {
+      toast.error('Property rejected!');
+      queryClient.invalidateQueries(['admin-properties']);
+    }
+  });
 
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="max-w-7xl mx-auto px-2 sm:px-4 py-8">
+    <div className="w-full mx-auto px-2 sm:px-4 py-8">
       <h1 className="text-3xl font-bold text-property-secondary mb-8 text-center">Manage Properties</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-xl shadow-lg">

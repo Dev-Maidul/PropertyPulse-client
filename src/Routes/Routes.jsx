@@ -20,6 +20,7 @@ import ManageProperties from "../Pages/Dashboard/Admin/ManageProperties";
 import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers";
 import RequestedProperties from "../Pages/Dashboard/Agent/RequestedProperties";
 import MyReviews from "../Pages/Dashboard/User/MyReviews";
+import MySoldProperties from "../Pages/Dashboard/Agent/MySoldProperties";
 
 export const router = createBrowserRouter([
   {
@@ -93,6 +94,10 @@ export const router = createBrowserRouter([
       {
         path:'/dashboard/requested-properties',
         element:<RequestedProperties></RequestedProperties>
+      },
+      {
+        path:'/dashboard/my-sold-properties',
+        element:<MySoldProperties></MySoldProperties>
       },
       // user related
       {

@@ -21,6 +21,7 @@ import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers";
 import RequestedProperties from "../Pages/Dashboard/Agent/RequestedProperties";
 import MyReviews from "../Pages/Dashboard/User/MyReviews";
 import MySoldProperties from "../Pages/Dashboard/Agent/MySoldProperties";
+import ManageReview from "../Pages/Dashboard/Admin/ManageReview";
 
 export const router = createBrowserRouter([
   {
@@ -78,7 +79,12 @@ export const router = createBrowserRouter([
         path:'/dashboard/manage-users',
         element:<ManageUsers></ManageUsers>
       },
-      // Admin related api
+      {
+        path:'/dashboard/manage-reviews',
+        element:<ManageReview></ManageReview>
+      },
+
+      // Agent related api
       {
         path: "add-property",
         element: <AddProperty />,

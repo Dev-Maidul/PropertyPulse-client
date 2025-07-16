@@ -62,6 +62,10 @@ export const router = createBrowserRouter([
         element: <p>Hello Dashboard</p>,
       },
       {
+        path:'/dashboard/admin-profile',
+        element:<Profile></Profile>
+      },
+      {
         path: "add-property",
         element: <AddProperty />,
       },

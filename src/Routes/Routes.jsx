@@ -16,6 +16,7 @@ import Wishlist from "../Pages/Dashboard/User/Wishlist";
 import MakeOffer from "../Pages/Dashboard/User/MakeOffer";
 import PropertyBought from "../Pages/Dashboard/User/PropertyBought";
 import PaymentPage from "../Shared/PaymentPage";
+import ManageProperties from "../Pages/Dashboard/Admin/ManageProperties";
 
 export const router = createBrowserRouter([
   {
@@ -64,6 +65,10 @@ export const router = createBrowserRouter([
       {
         path:'/dashboard/admin-profile',
         element:<Profile></Profile>
+      },
+      {
+        path:'/dashboard/manage-properties',
+        element:<ManageProperties></ManageProperties>
       },
       {
         path: "add-property",

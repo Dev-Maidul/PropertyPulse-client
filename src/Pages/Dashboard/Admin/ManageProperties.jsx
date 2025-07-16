@@ -30,15 +30,15 @@ const ManageProperties = () => {
   });
 
   // Reject property mutation
-  const rejectProperty = useMutation({
-    mutationFn: async (id) => {
-      return axiosSecure.patch(`/admin/properties/reject/${id}`);
-    },
-    onSuccess: () => {
-      toast.error('Property rejected!');
-      queryClient.invalidateQueries(['admin-properties']);
-    }
-  });
+//   const rejectProperty = useMutation({
+//     mutationFn: async (id) => {
+//       return axiosSecure.patch(`/admin/properties/reject/${id}`);
+//     },
+//     onSuccess: () => {
+//       toast.error('Property rejected!');
+//       queryClient.invalidateQueries(['admin-properties']);
+//     }
+//   });
 
   if (isLoading) return <Spinner />;
 

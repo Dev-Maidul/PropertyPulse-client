@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import CustomButton from '../../Shared/CustomButton';
 import { FaHeart, FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
@@ -13,7 +13,6 @@ import Spinner from '../../Shared/Spinner';
 const PropertyDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
-  const queryClient = useQueryClient();
   const { user } = useAuth();
   const [showReviewModal, setShowReviewModal] = useState(false);
 
@@ -55,18 +54,23 @@ const PropertyDetails = () => {
   if (!property) return <div className="text-center py-20">Property not found.</div>;
 
   return (
-    <div className="w-full mx-auto px-4 py-8">
+    <div className="w-full mx-auto px-2 sm:px-4 py-8">
       <motion.div
-        className="bg-white rounded-xl shadow-lg p-6 flex flex-col md:flex-col gap-8"
+        className="bg-white rounded-xl shadow-lg p-6 flex flex-col md:flex-row gap-8"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <img
-          src={property.imageUrl}
-          alt={property.title}
-          className="w-full h-120 object-cover rounded-lg shadow-md"
-        />
-        <div className="flex-1 flex flex-col justify-between">
+        {/* Image Column */}
+        <div className="md:w-1/2 w-full flex items-center justify-center">
+          <img
+            src={property.imageUrl}
+            alt={property.title}
+            className="w-full h-80 object-cover rounded-lg shadow-md"
+            style={{ objectPosition: 'center' }}
+          />
+        </div>
+        {/* Info Column */}
+        <div className="md:w-1/2 w-full flex flex-col justify-between">
           <div>
             <h2 className="text-3xl font-bold text-property-secondary mb-2">{property.title}</h2>
             <p className="text-gray-600 mb-2">{property.description || "No description provided."}</p>
@@ -90,21 +94,21 @@ const PropertyDetails = () => {
             </div>
             <p className="text-gray-500 mb-2">Location: {property.location}</p>
           </div>
-      
-          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-4">
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 mt-6">
             <CustomButton
               text="Add to Wishlist"
               color="red"
               onClick={() => addToWishlist.mutate()}
               icon={<FaHeart className="inline mr-2" />}
-              className="flex-1"
+              className="flex-1 py-3 text-lg font-bold shadow hover:scale-105 transition-transform duration-200"
             />
             <CustomButton
               text="Add a Review"
               color="blue"
               onClick={() => setShowReviewModal(true)}
               icon={<FaStar className="inline mr-2" />}
-              className="flex-1"
+              className="flex-1 py-3 text-lg font-bold shadow hover:scale-105 transition-transform duration-200"
             />
           </div>
         </div>
@@ -154,9 +158,9 @@ const PropertyDetails = () => {
           propertyId={id}
           user={user}
           onClose={() => setShowReviewModal(false)}
-          onSuccess={() => {
+          onSuccess={async () => {
+            await refetchReviews();
             setShowReviewModal(false);
-            refetchReviews();
           }}
         />
       )}

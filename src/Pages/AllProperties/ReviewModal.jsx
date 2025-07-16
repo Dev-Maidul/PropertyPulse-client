@@ -8,11 +8,6 @@ const ReviewModal = ({ propertyId, user, onClose, onSuccess }) => {
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const axiosSecure = useAxiosSecure();
-  const handleTextareaKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +22,7 @@ const ReviewModal = ({ propertyId, user, onClose, onSuccess }) => {
         comment,
       });
       toast.success('Review added!');
-      onSuccess();
+      await onSuccess(); // Await for refetch before closing modal
     } catch (err) {
       toast.error('Failed to add review');
     }
@@ -63,12 +58,11 @@ const ReviewModal = ({ propertyId, user, onClose, onSuccess }) => {
           placeholder="Write your review..."
           value={comment}
           onChange={e => setComment(e.target.value)}
-          onKeyDown={handleTextareaKeyDown}
           required
         />
         <button
           type="submit"
-          className="w-full py-2 rounded bg-property-secondary text-white font-semibold hover:bg-property-primary transition-colors duration-200"
+          className="w-full py-2 mt-2 rounded bg-[#1e2939] text-white font-semibold hover:bg-property-primary transition-colors duration-200 cursor-pointer"
           disabled={loading}
         >
           {loading ? "Submitting..." : "Submit Review"}

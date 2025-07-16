@@ -24,7 +24,7 @@ const AllProperties = () => {
   };
 
   if (isLoading) {
-    return Spinner
+    return <Spinner></Spinner>
   }
 
   return (

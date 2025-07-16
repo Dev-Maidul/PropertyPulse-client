@@ -18,6 +18,8 @@ import PropertyBought from "../Pages/Dashboard/User/PropertyBought";
 import PaymentPage from "../Shared/PaymentPage";
 import ManageProperties from "../Pages/Dashboard/Admin/ManageProperties";
 import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers";
+import RequestedProperties from "../Pages/Dashboard/Agent/RequestedProperties";
+import MyReviews from "../Pages/Dashboard/User/MyReviews";
 
 export const router = createBrowserRouter([
   {
@@ -75,6 +77,7 @@ export const router = createBrowserRouter([
         path:'/dashboard/manage-users',
         element:<ManageUsers></ManageUsers>
       },
+      // Admin related api
       {
         path: "add-property",
         element: <AddProperty />,
@@ -87,6 +90,11 @@ export const router = createBrowserRouter([
         path:'update-property/:id',
         element:<UpdateProperty></UpdateProperty>
       },
+      {
+        path:'/dashboard/requested-properties',
+        element:<RequestedProperties></RequestedProperties>
+      },
+      // user related
       {
         path:'profile',
         element:<Profile></Profile>
@@ -106,7 +114,11 @@ export const router = createBrowserRouter([
       {
         path:'/dashboard/payment/:offerId',
         element:<PaymentPage></PaymentPage>
-      }
+      },
+      {
+        path:'/dashboard/my-reviews',
+        element:<MyReviews></MyReviews>
+      },
       
     ],
   },

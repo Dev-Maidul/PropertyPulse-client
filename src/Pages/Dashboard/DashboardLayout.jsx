@@ -18,7 +18,7 @@ const DashboardLayout = () => {
   const [role, isRoleLoading] = useRole();
   const navigate = useNavigate();
 
-  if (isRoleLoading) return <Spinner />;
+  if (isRoleLoading) return <Spinner></Spinner>;
 
   const classNames = (...classes) => classes.filter(Boolean).join(" ");
 

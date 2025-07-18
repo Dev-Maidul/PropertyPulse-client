@@ -1,12 +1,20 @@
 import React from 'react';
 import Banner from './Banner';
 import AllProperties from '../AllProperties/AllProperties';
+import AdvertisedSection from './AdvertisedSection';
+import LatestReview from './LatestReview';
+import WhyChooseUs from './WhyChooseUs';
+import HowItWorks from './HowItWorks';
 
 const Home = () => {
     return (
         <div>
            <Banner></Banner>
-           <AllProperties></AllProperties>
+           <AdvertisedSection></AdvertisedSection>
+           <LatestReview></LatestReview>
+           <WhyChooseUs></WhyChooseUs>
+           <HowItWorks></HowItWorks>
+           {/* <AllProperties></AllProperties> */}
         </div>
     );
 };

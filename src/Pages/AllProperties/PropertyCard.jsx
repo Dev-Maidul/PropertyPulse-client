@@ -1,51 +1,56 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import CustomButton from '../../Shared/CustomButton';
-import { useNavigate } from 'react-router-dom';
 
-const PropertyCard = ({ property }) => {
-  const navigate = useNavigate();
+const PropertyCard = ({ property, onDetails }) => {
   return (
     <motion.div
-      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 border border-gray-100 hover:border-property-secondary group"
-      whileHover={{ scale: 1.03 }}
-      initial={{ opacity: 0, y: 30 }}
+      className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 
+        hover:shadow-lg transition-all duration-300 h-[420px] flex flex-col"
+      whileHover={{ scale: 1.03, y: -5 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
     >
-      <div className="relative">
+      <div className="relative h-48 flex-shrink-0">
         <img
           src={property.imageUrl}
           alt={property.title}
-          className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        <span className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold
-          ${property.status === "Verified" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}
-        `}>
+        <span
+          className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold
+            ${property.status === 'Verified' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}
+        >
           {property.status}
         </span>
       </div>
-      <div className="p-4">
-        <h2 className="text-xl font-bold text-property-secondary mb-1">{property.title}</h2>
-        <p className="text-gray-500 mb-2">Location: {property.location}</p>
-        <div className="flex items-center mb-2">
+      <div className="p-4 flex flex-col flex-grow">
+        <h2 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-1">{property.title}</h2>
+        <p className="text-gray-600 text-sm mb-2 line-clamp-1">Location: {property.location}</p>
+        <div className="flex items-center mb-3">
           <img
             src={property.agentImage}
             alt={property.agentName}
-            className="w-8 h-8 rounded-full border-2 border-property-secondary mr-2"
+            className="w-8 h-8 rounded-full border-2 border-gray-300 mr-2 object-cover"
           />
-          <span className="text-sm font-medium text-gray-700">Agent Name: {property.agentName}</span>
-        </div>
-        <div className="flex justify-between items-center mb-3">
-          <span className="text-lg font-semibold text-property-secondary">
-            Price Range: ৳ {property.priceRange}
+          <span className="text-sm font-medium text-gray-700 line-clamp-1">
+            Agent: {property.agentName}
           </span>
         </div>
-        <CustomButton
-          text="See Details"
-          className='px-2 py-2'
-          color="red"
-          onClick={() => navigate(`/property-details/${property._id}`)}
-        />
+        <div className="flex justify-between items-center mb-4">
+          <span className="text-base font-semibold text-gray-800">
+            ৳ {property.priceRange}
+          </span>
+        </div>
+        <div className="mt-auto">
+          <button
+            onClick={() => onDetails(property._id)}
+            className="w-full bg-red-500 text-white px-4 py-2 rounded-md 
+              hover:bg-red-600 transition-colors duration-200 text-sm font-medium"
+          >
+            See Details
+          </button>
+        </div>
       </div>
     </motion.div>
   );

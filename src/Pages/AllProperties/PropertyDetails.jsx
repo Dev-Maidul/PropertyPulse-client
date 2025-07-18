@@ -6,15 +6,17 @@ import { FaHeart, FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import ReviewModal from './ReviewModal';
 import toast from 'react-hot-toast';
-import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import useAuth from '../../Hooks/useAuth';
 import Spinner from '../../Shared/Spinner';
+import ReportModal from '../Dashboard/User/ReportModal';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const PropertyDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   // Fetch property details
   const { data: property, isLoading } = useQuery({
@@ -110,6 +112,12 @@ const PropertyDetails = () => {
               icon={<FaStar className="inline mr-2" />}
               className="flex-1 py-3 text-lg font-bold shadow hover:scale-105 transition-transform duration-200"
             />
+            <CustomButton
+              text="Report this property"
+              color="gray"
+              onClick={() => setShowReportModal(true)}
+              className="flex-1 py-3 text-lg font-bold shadow hover:scale-105 transition-transform duration-200"
+            />
           </div>
         </div>
       </motion.div>
@@ -162,6 +170,15 @@ const PropertyDetails = () => {
             await refetchReviews();
             setShowReviewModal(false);
           }}
+        />
+      )}
+
+      {/* Report Modal */}
+      {showReportModal && (
+        <ReportModal
+          property={property}
+          user={user}
+          onClose={() => setShowReportModal(false)}
         />
       )}
     </div>

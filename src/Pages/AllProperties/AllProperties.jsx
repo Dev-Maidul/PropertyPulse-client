@@ -1,41 +1,88 @@
-
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import Spinner from '../../Shared/Spinner';
 import PropertyCard from './PropertyCard';
 
-
 const AllProperties = () => {
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+  const [properties, setProperties] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
+  const [sort, setSort] = useState('');
 
-  const { data: properties = [], isLoading } = useQuery({
-    queryKey: ['all-properties'],
-    queryFn: async () => {
-      const res = await axiosSecure.get('/properties');
-      return res.data;
-    }
-  });
+  // Fetch properties
+  useEffect(() => {
+    const fetchProperties = async () => {
+      setIsLoading(true);
+      try {
+        const params = { status: 'Verified' }; // Only fetch verified properties
+        if (searchInput) params.location = searchInput;
+        if (sort) params.sort = sort;
+        
+        const res = await axiosSecure.get('/properties', { params });
+        setProperties(res.data);
+      } catch (error) {
+        console.error('Failed to fetch properties:', error);
+        setProperties([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProperties();
+  }, [searchInput, sort, axiosSecure]); // Changed dependency from 'search' to 'searchInput'
+
+  // Handle sort change
+  const handleSort = (e) => {
+    setSort(e.target.value);
+  };
 
   const handleDetails = (id) => {
-    navigate(`/property/${id}`);
+    navigate(`/property-details/${id}`);
   };
 
   if (isLoading) {
-    return <Spinner></Spinner>
+    return <Spinner />;
   }
 
   return (
-    <div className="w-full mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-property-secondary mb-8 text-center">All Verified Properties</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        {properties.length === 0 && (
-          <div className="col-span-full text-center text-gray-500">No properties found.</div>
+    <div className="w-full px-4 py-8 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+        All Verified Properties
+      </h1>
+      {/* Search and Sort Controls */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-center items-center">
+        <input
+          type="text"
+          placeholder="Search by location"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          className="input input-bordered w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-red-500"
+        />
+        <select
+          value={sort}
+          onChange={handleSort}
+          className="select select-bordered w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-red-500"
+        >
+          <option value="">Sort by Price</option>
+          <option value="asc">Low to High</option>
+          <option value="desc">High to Low</option>
+        </select>
+      </div>
+      {/* Properties Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {properties.length === 0 && !isLoading && (
+          <div className="col-span-full text-center text-gray-500">
+            No properties found. Try a different search.
+          </div>
         )}
-        {properties.map(property => (
-          <PropertyCard key={property._id} property={property} onDetails={handleDetails} />
+        {properties.map((property) => (
+          <PropertyCard
+            key={property._id}
+            property={property}
+            onDetails={handleDetails}
+          />
         ))}
       </div>
     </div>

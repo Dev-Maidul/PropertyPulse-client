@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FaUser, FaPlus, FaList, FaShoppingCart } from "react-icons/fa";
+import { FaUser, FaPlus, FaList, FaShoppingCart, FaChartBar } from "react-icons/fa";
 
 const AgentMenu = ({ classNames, onItemClick }) => (
   <>
@@ -33,6 +33,12 @@ const AgentMenu = ({ classNames, onItemClick }) => (
         <span>Requested Properties</span>
       </NavLink>
     </li>
+    <li>
+  <NavLink to="/dashboard/selling-statistics" className={classNames} onClick={onItemClick}>
+    <FaChartBar size={18} />
+    <span>Selling Statistics</span>
+  </NavLink>
+</li>
   </>
 );
 

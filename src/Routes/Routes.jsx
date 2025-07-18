@@ -22,6 +22,11 @@ import RequestedProperties from "../Pages/Dashboard/Agent/RequestedProperties";
 import MyReviews from "../Pages/Dashboard/User/MyReviews";
 import MySoldProperties from "../Pages/Dashboard/Agent/MySoldProperties";
 import ManageReview from "../Pages/Dashboard/Admin/ManageReview";
+import AdvertisedProperties from "../Pages/Dashboard/Admin/AdvertisedProperties";
+import ReportedProperties from "../Pages/Dashboard/Admin/ReportedProperties";
+import SellingStatistics from "../Pages/Dashboard/Agent/SellingStatistics";
+import AdminRoute from "./AdminRoute";
+import AgentRoute from "./AgentRoute";
 
 export const router = createBrowserRouter([
   {
@@ -67,35 +72,72 @@ export const router = createBrowserRouter([
         index: true,
         element: <p>Hello Dashboard</p>,
       },
+      // admin related
       {
         path:'/dashboard/admin-profile',
-        element:<Profile></Profile>
+        element:<PrivateRoute>
+          <AdminRoute><Profile></Profile></AdminRoute>
+        </PrivateRoute>
       },
       {
         path:'/dashboard/manage-properties',
-        element:<ManageProperties></ManageProperties>
+        element:<PrivateRoute>
+          <AdminRoute><ManageProperties></ManageProperties></AdminRoute>
+        </PrivateRoute>
+      },
+      {
+        path:'/dashboard/advertise-property',
+        element:<PrivateRoute>
+          <AdminRoute><AdvertisedProperties></AdvertisedProperties></AdminRoute>
+        </PrivateRoute>
       },
       {
         path:'/dashboard/manage-users',
-        element:<ManageUsers></ManageUsers>
+        element:<PrivateRoute>
+          <AdminRoute><ManageUsers></ManageUsers></AdminRoute>
+        </PrivateRoute>
       },
       {
         path:'/dashboard/manage-reviews',
-        element:<ManageReview></ManageReview>
+        element:<PrivateRoute>
+          <AdminRoute>
+            <ManageReview></ManageReview>
+          </AdminRoute>
+        </PrivateRoute>
+      },
+      {
+        path:'/dashboard/reported-property',
+        element:<PrivateRoute>
+          <AdminRoute>
+            <ReportedProperties></ReportedProperties>
+          </AdminRoute>
+        </PrivateRoute>
       },
 
       // Agent related api
       {
         path: "add-property",
-        element: <AddProperty />,
+        element: <PrivateRoute>
+          <AgentRoute>
+            <AddProperty />
+          </AgentRoute>
+        </PrivateRoute>,
       },
       {
         path:'my-added-properties',
-        element:<MyAddedProperties></MyAddedProperties>
+        element:<PrivateRoute>
+          <AgentRoute>
+            <MyAddedProperties></MyAddedProperties>
+          </AgentRoute>
+        </PrivateRoute>
       },
       {
         path:'update-property/:id',
-        element:<UpdateProperty></UpdateProperty>
+        element:<PrivateRoute>
+          <AgentRoute>
+            <UpdateProperty></UpdateProperty>
+          </AgentRoute>
+        </PrivateRoute>
       },
       {
         path:'/dashboard/requested-properties',
@@ -103,7 +145,19 @@ export const router = createBrowserRouter([
       },
       {
         path:'/dashboard/my-sold-properties',
-        element:<MySoldProperties></MySoldProperties>
+        element:<PrivateRoute>
+          <AgentRoute>
+            <MySoldProperties></MySoldProperties>
+          </AgentRoute>
+        </PrivateRoute>
+      },
+      {
+        path:'/dashboard/selling-statistics',
+        element:<PrivateRoute>
+          <AgentRoute>
+            <SellingStatistics></SellingStatistics>
+          </AgentRoute>
+        </PrivateRoute>
       },
       // user related
       {

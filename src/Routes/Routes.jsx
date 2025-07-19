@@ -27,6 +27,7 @@ import ReportedProperties from "../Pages/Dashboard/Admin/ReportedProperties";
 import SellingStatistics from "../Pages/Dashboard/Agent/SellingStatistics";
 import AdminRoute from "./AdminRoute";
 import AgentRoute from "./AgentRoute";
+import DashboardHome from "../Pages/Dashboard/DashboardHome";
 
 export const router = createBrowserRouter([
   {
@@ -70,7 +71,9 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <p>Hello Dashboard</p>,
+        element: <PrivateRoute>
+          <DashboardHome></DashboardHome>
+        </PrivateRoute>,
       },
       // admin related
       {

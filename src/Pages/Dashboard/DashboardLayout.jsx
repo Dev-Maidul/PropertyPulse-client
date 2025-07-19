@@ -18,7 +18,7 @@ const DashboardLayout = () => {
   const [role, isRoleLoading] = useRole();
   const navigate = useNavigate();
 
-  if (isRoleLoading) return <Spinner></Spinner>;
+  if (isRoleLoading) return <Spinner />;
 
   const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
@@ -49,7 +49,20 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 text-[#1E3A8A]">
+    <div className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 text-[#1E3A8A] relative">
+      {/* Grid Pattern Overlay */}
+      <div
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, #b3c6e0 1px, transparent 1px),
+            linear-gradient(to bottom, #b3c6e0 1px, transparent 1px)
+          `,
+          backgroundSize: "20px 20px",
+          opacity: 0.2,
+        }}
+      />
+
       {/* Mobile Menu Button */}
       <div className="md:hidden fixed top-4 left-4 z-40">
         <Disclosure>
@@ -129,7 +142,7 @@ const DashboardLayout = () => {
 
       {/* Sidebar for Desktop */}
       <motion.div
-        className="hidden md:flex flex-col w-72 bg-gradient-to-b from-[#1E3A8A] to-[#2563EB] text-white shadow-2xl p-6 min-h-screen rounded-r-2xl"
+        className="hidden md:flex flex-col w-72 bg-gradient-to-b from-[#1E3A8A] to-[#2563EB] text-white shadow-2xl p-6 min-h-screen rounded-r-2xl relative z-10"
         initial="hidden"
         animate="visible"
         variants={sidebarVariants}
@@ -186,7 +199,7 @@ const DashboardLayout = () => {
 
       {/* Main Content Area */}
       <motion.main
-        className="flex-1 p-6 md:p-8 overflow-y-auto bg-white rounded-lg shadow-inner ml-4"
+        className="flex-1 p-6 md:p-8 overflow-y-auto bg-white rounded-lg shadow-inner ml-4 relative z-10"
         initial="hidden"
         animate="visible"
         variants={contentVariants}

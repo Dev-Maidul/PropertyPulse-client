@@ -1,10 +1,7 @@
+🏠 PropertyPulse
+Live Site URL:** https://pro-fast-curier.web.app/
 
-````markdown
-# 🏠 PropertyPulse
-
-**Live Site URL:** [Your live site link here]
-
-## 📜 Features
+ 📜 Features
 
 - **Real Estate Platform**: A comprehensive platform for buying, selling, and reviewing real estate properties, with user, agent, and admin roles.
 - **User Registration/Login**: Secure authentication system with email/password-based login and JWT-based session management.
@@ -100,9 +97,6 @@
 
 Feel free to fork this project and create pull requests for any improvements or bug fixes. Please make sure to follow the coding conventions and guidelines used in this repository.
 
----
-
 **Happy coding!** 🎉
 
-```
 

@@ -32,7 +32,7 @@ const BannerSlider = () => {
   ];
 
   return (
-    <div className="relative w-full max-w-[1400px] mx-auto">
+    <div className="relative w-full mx-auto">
       <Swiper
         modules={[Navigation, Pagination, Autoplay, EffectFade]}
         spaceBetween={0}

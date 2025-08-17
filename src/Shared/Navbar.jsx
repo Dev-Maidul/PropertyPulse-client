@@ -48,6 +48,18 @@ const Navbar = () => {
           All Properties
         </NavLink>
       </li>
+      <li>
+        <NavLink
+          to="/contact"
+          className={({ isActive }) =>
+            isActive
+              ? "text-[#4F46E5] font-bold"
+              : "hover:text-[#4F46E5] font-medium"
+          }
+        >
+          Contact
+        </NavLink>
+      </li>
     </>
   );
 

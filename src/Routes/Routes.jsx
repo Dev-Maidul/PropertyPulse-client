@@ -28,6 +28,7 @@ import SellingStatistics from "../Pages/Dashboard/Agent/SellingStatistics";
 import AdminRoute from "./AdminRoute";
 import AgentRoute from "./AgentRoute";
 import DashboardHome from "../Pages/Dashboard/DashboardHome";
+import Contact from "../Components/Contact";
 
 export const router = createBrowserRouter([
   {
@@ -47,12 +48,12 @@ export const router = createBrowserRouter([
         element: <Register />,
       },
       {
+        path: "/contact",
+        element: <Contact></Contact>,
+      },
+      {
         path: "/all-properties",
-        element: (
-          
-            <PrivateRoute><AllProperties /></PrivateRoute>
-         
-        ),
+        element:<AllProperties />
       },
       {
         path:'/property-details/:id',

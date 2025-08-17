@@ -5,6 +5,7 @@ import AdvertisedSection from './AdvertisedSection';
 import LatestReview from './LatestReview';
 import WhyChooseUs from './WhyChooseUs';
 import HowItWorks from './HowItWorks';
+import FAQ from '../../Components/FAQ';
 
 const Home = () => {
     return (
@@ -15,6 +16,7 @@ const Home = () => {
            <WhyChooseUs></WhyChooseUs>
            <HowItWorks></HowItWorks>
            <LatestReview></LatestReview>
+           <FAQ></FAQ>
            {/* <AllProperties></AllProperties> */}
         </div>
     );

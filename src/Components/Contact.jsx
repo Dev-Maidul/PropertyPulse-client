@@ -31,7 +31,19 @@ const Contact = () => {
       },
     },
   };
- 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    try {
+
+      console.log('Form submitted successfully!');
+      toast.success("Thank you for contacting us!");
+      e.target.reset();
+
+    } catch (error) {
+      console.error('Submission error:', error);
+      toast.error("There was an error. Please try again.");
+    }
+  };
 
   return (
     <div className="bg-base-200 min-h-screen py-12 flex items-center justify-center">

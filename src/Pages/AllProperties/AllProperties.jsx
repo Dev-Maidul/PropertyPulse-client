@@ -47,7 +47,7 @@ const AllProperties = () => {
   }
 
   return (
-    <div className="w-full px-4 py-8 max-w-7xl mx-auto">
+    <div className="w-full px-4 py-8 mx-auto">
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         All Verified Properties
       </h1>

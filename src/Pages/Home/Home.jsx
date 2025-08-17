@@ -6,6 +6,7 @@ import LatestReview from './LatestReview';
 import WhyChooseUs from './WhyChooseUs';
 import HowItWorks from './HowItWorks';
 import FAQ from '../../Components/FAQ';
+import Newsletter from '../../Components/Newsletter';
 
 const Home = () => {
     return (
@@ -17,6 +18,7 @@ const Home = () => {
            <HowItWorks></HowItWorks>
            <LatestReview></LatestReview>
            <FAQ></FAQ>
+           <Newsletter></Newsletter>
            {/* <AllProperties></AllProperties> */}
         </div>
     );

@@ -60,7 +60,7 @@ const FAQ = () => {
   return (
     <div className=" min-h-screen py-16 flex flex-col items-center justify-center">
       <motion.div
-        className="container mx-auto px-4 max-w-4xl"
+        className="container mx-auto px-4 w-full"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
